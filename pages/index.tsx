@@ -1,7 +1,55 @@
 import Head from 'next/head'
-import { Title } from '@/styles/styleHome'
+import {
+  Container,
+  Content,
+  ContainerImage,
+  Header,
+  UserInfoContainer,
+  NameAndStatusContainer,
+  UserName,
+  UserStatus,
+  CloseButton,
+  ChatContainer,
+  AuthorMessage,
+  MessageDate,
+  ContainerUl,
+  ContainerMessageLi,
+  TextMessage,
+  ChatForm,
+  ChatInput,
+  SubmitButton
+} from '@/styles/styleHome'
 
+import Image from 'next/image'
+import { MdOutlineClose, MdSend } from 'react-icons/md'
+import { useRef, useState, useEffect } from 'react'
+import { getHourAndMinuts } from '@/utils/getHourAndMinutes'
+
+interface TypeMessage {
+  author: 'Você' | 'user2',
+  text: string,
+  time: string,
+}
 export default function Home() {
+  const [messages, setMessages] = useState<TypeMessage[]>([]);
+  const [newMessage, setNewMessage] = useState('');
+  const messagesEndRef = useRef<HTMLHeadingElement>(null)
+
+  const scrollToBottom = () => {
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" })
+  }
+
+  useEffect(() => {
+    scrollToBottom()
+  }, [messages]);
+
+  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    setMessages([...messages, { author: 'Você', text: newMessage, time: getHourAndMinuts() }]);
+    setNewMessage('');
+
+  };
+
   return (
     <>
       <Head>
@@ -10,9 +58,54 @@ export default function Home() {
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <main>
-        <Title>HELLO WORLD</Title>
-      </main>
+      <Container>
+        <Header>
+          <UserInfoContainer>
+            <ContainerImage>
+              <Image src='https://avatars.githubusercontent.com/u/77014702?v=4' fill sizes='100%' alt='' />
+            </ContainerImage>
+            <NameAndStatusContainer>
+              <UserName>Cecilia Sassaki</UserName>
+              <UserStatus>Online</UserStatus>
+            </NameAndStatusContainer>
+          </UserInfoContainer>
+          <CloseButton>
+            <MdOutlineClose />
+          </CloseButton>
+        </Header>
+        <ChatContainer>
+          <ContainerUl>
+            {messages.map((message, index) => (
+              <>
+                {
+                  messages[index - 1] &&
+                    new Date(messages[index].time).getTime() - new Date(messages[index - 1].time).getTime() > 60 * 60 * 1000 ||
+                    index === 0
+                    ? (
+                      <MessageDate>Hoje {getHourAndMinuts()}</MessageDate>
+                    )
+                    : null
+                }
+                <ContainerMessageLi key={index}>
+                  <AuthorMessage>{message.author} - {message.time}</AuthorMessage>
+                  <TextMessage>{message.text}</TextMessage>
+                </ContainerMessageLi>
+              </>
+            ))}
+          </ContainerUl>
+        </ChatContainer>
+        <ChatForm onSubmit={handleSubmit}>
+          <ChatInput
+            autoFocus
+            type="text"
+            placeholder='Digite sua mensagem'
+            value={newMessage}
+            onChange={event => setNewMessage(event.target.value)}
+          />
+          <SubmitButton type="submit"><MdSend /></SubmitButton>
+        </ChatForm>
+      </Container>
+      <div id="chatEnd" ref={messagesEndRef} />
     </>
   )
 }
