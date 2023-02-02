@@ -8,7 +8,7 @@ const Container = styled.div`
    display: grid; 
     grid-template-rows: 1fr auto;
     grid-template-columns: 1fr;
-    height: 100vh;
+    min-height: 100vh;
    `;
 
 const Content = styled.div`
@@ -77,6 +77,7 @@ const CloseButton = styled.button`
 const ChatContainer = styled.div`
   min-height: 100%;
   padding-top: 9.5rem;
+  padding-bottom: 8rem;
   display: grid;
   grid-template-rows: 100% auto;
 `
@@ -106,9 +107,9 @@ const ContainerUl = styled.ul`
 
 const ContainerMessageLi = styled.li`
   display: flex;
+  align-items: flex-end;
   flex-wrap: wrap;
   flex-direction: column;
-  align-items: flex-end;
   row-gap: .5rem;
 `
 
@@ -122,8 +123,10 @@ const TextMessage = styled.span`
   `
 
 const ChatForm = styled.form`
-     margin-top: 4rem;
-     position: relative;
+     position: fixed;
+      bottom: 0;
+      left: 0;
+      width: 100%;
 `
 
 const ChatInput = styled.input`

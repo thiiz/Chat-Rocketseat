@@ -18,7 +18,7 @@ import {
   ChatForm,
   ChatInput,
   SubmitButton
-} from '@/styles/styleHome'
+} from '@/styles/styleIndex'
 
 import Image from 'next/image'
 import { MdOutlineClose, MdSend } from 'react-icons/md'
