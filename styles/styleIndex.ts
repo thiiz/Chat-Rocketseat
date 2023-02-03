@@ -17,10 +17,10 @@ const Content = styled.div`
 const Header = styled.header`
   display: flex;
   align-items: center;
-  justify-content: space-around;
+  justify-content: space-between;
   position: fixed;
   background-color: ${props => props.theme.bg.default};
-  padding-top: 2.4rem;
+  padding: 2.4rem 2.4rem 1rem 2.4rem;
   width: 100%;
   left: 0;
 `;
@@ -41,20 +41,19 @@ const ContainerImage = styled.div`
 const NameAndStatusContainer = styled.div`
   display: flex;
   flex-direction: column;
-  row-gap: .5rem;
+  row-gap: .2rem;
 `
 
 const UserName = styled.span`
   color: ${props => props.theme.text.default};
   font-weight: 700;
   font-size: 1.6rem;
-  line-height: 1.9rem;
 `
 
 const UserStatus = styled.span`
     color: #00B37E;
     display: flex;
-    align-items: center;
+    align-items: baseline;
     font-size: 1.2rem;
     column-gap: .4rem;
 
@@ -68,16 +67,17 @@ const UserStatus = styled.span`
   }
 `
 const CloseButton = styled.button`
+  display: inline-flex;
   color: ${props => props.theme.text.default};  
   background: none;
   border: none;
-  font-size: 2rem; 
+  font-size: 2.3rem; 
+  cursor: pointer;
 `
 
 const ChatContainer = styled.div`
   min-height: 100%;
-  padding-top: 9.5rem;
-  padding-bottom: 8rem;
+  padding: 9.5rem 0 ;
   display: grid;
   grid-template-rows: 100% auto;
 `
@@ -118,15 +118,20 @@ const TextMessage = styled.span`
   background-color: ${props => props.theme.bg.chat.primary};
   padding: 1.4rem;
   border-radius: 8px 8px 0px 8px;
-  font-size: 1.2rem;
+  font-size: 1.35rem;
   word-break: break-word;
   `
+const FormContainer = styled.div`
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    padding-bottom: 2rem;
+    background-color: inherit;
+`
 
 const ChatForm = styled.form`
-     position: fixed;
-      bottom: 0;
-      left: 0;
-      width: 100%;
+   position: relative;
 `
 
 const ChatInput = styled.input`
@@ -139,7 +144,7 @@ const ChatInput = styled.input`
   border-radius: 999px;
   line-height: 1.4rem;
   padding: 1rem 2rem;
-  font-size: 1.2rem;
+  font-size: 1.35rem;
   &::placeholder {
     color: ${props => props.theme.text.default};
   }
@@ -153,7 +158,7 @@ const SubmitButton = styled.button`
   border: none;
   font-size: 2.8rem;
   color: ${props => props.theme.text.default};
-  
+  cursor: pointer;
 `
 export {
   Container,
@@ -171,6 +176,7 @@ export {
   ContainerMessageLi,
   AuthorMessage,
   TextMessage,
+  FormContainer,
   ChatForm,
   ChatInput,
   SubmitButton
