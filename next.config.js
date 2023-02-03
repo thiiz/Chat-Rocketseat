@@ -8,7 +8,7 @@ const nextConfig = {
     },
   },
   images: {
-    domains: ['randomuser.me', 'lh3.googleusercontent.com'],
+    domains: ['randomuser.me', 'lh3.googleusercontent.com', 'avatars.githubusercontent.com'],
   }
 }
 

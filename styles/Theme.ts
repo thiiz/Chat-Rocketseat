@@ -10,6 +10,7 @@ const lightTheme = {
 	text: {
 		default: '#E1E1E6',
 		green: '#00B37E',
+		placeholder: '#bbbbbf',
 	},
 	hover: {
 		button: '#3f3f3f',
@@ -28,6 +29,7 @@ const darkTheme = {
 	text: {
 		default: '#E1E1E6',
 		green: '#00B37E',
+		placeholder: '#bbbbbf',
 	},
 	hover: {
 		button: '#3f3f3f',

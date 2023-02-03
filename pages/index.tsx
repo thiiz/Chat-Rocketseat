@@ -7,32 +7,28 @@ import { useState } from 'react';
 import { onAuthStateChanged } from 'firebase/auth';
 import Loading from '@/components/loading';
 import Home from '@/components/home';
-import Header from '@/components/home/Header';
 
-export type User = {
-  name: string | null;
-  email: string | null;
-  img: string | null;
-  isOnline: boolean;
+
+export interface UserTypes {
+  userData: {
+    name: string | null;
+    email: string | null;
+    img: string | null;
+    isOnline: boolean;
+  };
+  setUserData: React.Dispatch<React.SetStateAction<any>>
 }
 
-const Index: React.FC<{ userData: User; }> = () => {
+const Index: React.FC<UserTypes> = () => {
   const [user, loading] = useAuthState(auth as any)
-  const [userData, setUserData] = useState({} as User)
+  const [userData, setUserData] = useState<UserTypes['userData']>({
+    name: null,
+    email: null,
+    img: null,
+    isOnline: false,
+  })
   const [isOnline, setIsOnline] = useState(false)
 
-  onAuthStateChanged(auth, (user) => {
-    if (user) {
-      const uid = user.uid;
-      console.log("user Online ", uid)
-      setIsOnline(true)
-      // ...
-    } else {
-      console.log("user Offline")
-      setIsOnline(false)
-      // ...
-    }
-  });
 
   useEffect(() => {
     if (user) {
@@ -53,7 +49,7 @@ const Index: React.FC<{ userData: User; }> = () => {
 
   return user ?
     <>
-      <Home user={userData} />
+      <Home userData={userData} setUserData={setUserData} />
     </>
     :
     <Login />
