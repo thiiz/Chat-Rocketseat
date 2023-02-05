@@ -3,9 +3,7 @@ const nextConfig = {
   reactStrictMode: true,
 
   compiler: {
-    styledComponents: true | {
-      ssr: true,
-    },
+    styledComponents: true,
   },
   images: {
     domains: ['randomuser.me', 'lh3.googleusercontent.com', 'avatars.githubusercontent.com'],

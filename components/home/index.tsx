@@ -9,66 +9,56 @@ import {
 	UserName,
 	LogoutButton,
 	LogoutSpan,
-	FriendsContainer,
-	ContainerUl,
 	SearchContainer,
 	SearchForm,
 	SearchInput,
 	SubmitButton,
-	FriendsLi
+	ContainerUserNameAndUserID,
+	UserID
 } from './styleIndex'
 import Image from "next/image";
 import { useEffect, useState } from 'react';
 import { FaSearch, FaSignOutAlt } from 'react-icons/fa';
 import { auth, db } from "@/services/firebase";
-import { useCollection } from 'react-firebase-hooks/firestore'
-
-
-
-type Friend = {
-	name: string;
-	message: string;
-	img: string;
-};
-
-export type FriendsList = Friend[];
-
+import { collection, addDoc, setDoc, doc, where, query } from "firebase/firestore";
 
 const Home: React.FC<UserTypes> = ({ userData, setUserData }) => {
-	const [search, setSearch] = useState('');
-	const [friends, setFriends] = useState<FriendsList>([
-		{ name: "Vitor", img: "https://avatars.githubusercontent.com/thiizz", message: "eai cupinxa" },
-		{ name: "Nao sei", img: "https://avatars.githubusercontent.com/thiizz", message: "mas bah né guri" }
-	]);
+	const [search, setSearch] = useState<string>('');
 
 
-	const userChats = db.collection("chats").where("users", "array-contains", userData.email)
+	const [chatsSnapshot, setChatsSnapshot] = useState<any>(undefined)
 
-	const [chatsSnapshot, setChatsSnapshot] = useState<any>(null)
-	console.log(chatsSnapshot)
-	useEffect(() => {
-		return userChats.onSnapshot(snapshot => {
-			setChatsSnapshot(snapshot)
-		})
-	}, [userData.email])
 
-	const handleCreateChat = () => {
 
-	}
-
-	const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+	const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
 		e.preventDefault();
+		const isEmail =
+			/^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+		if (!isEmail) return alert("ENDEREÇO DE EMIAL INVÁLIDO")
+
+		if (chatExists(search)) return alert("O CHAT JÁ EXISTE")
+		await addDoc(collection(db, "chats"), {
+			users: [userData.email, search]
+		});
+
+		alert("CHAT CRIADO COM SUCESSO")
+
 	}
 
 	const handleLogout = () => {
 		auth.signOut()
 		setUserData({
+			userID: null,
 			name: null,
 			email: null,
 			img: null,
 			isOnline: false,
 		})
+	}
 
+	const chatExists = (newEmailChat: string) => {
+		return !!chatsSnapshot?.docs.find(
+			(chat: any) => chat.data().users.find((userData: string) => userData === newEmailChat)?.length > 0)
 	}
 	return (
 		<>
@@ -77,9 +67,12 @@ const Home: React.FC<UserTypes> = ({ userData, setUserData }) => {
 					<UserInfoContainer>
 						<MyProfileContainer>
 							<ContainerImage>
-								{userData?.img && <Image src={userData?.img} fill sizes='100%' alt='' />}
+								{userData?.photoURL && <Image src={userData?.photoURL} fill sizes='100%' alt='' />}
 							</ContainerImage>
-							<UserName>{userData?.name}</UserName>
+							<ContainerUserNameAndUserID>
+								<UserName>{userData?.displayName}</UserName>
+								<UserID>#{userData?.uid}</UserID>
+							</ContainerUserNameAndUserID>
 						</MyProfileContainer>
 						<LogoutButton onClick={handleLogout}>
 							<FaSignOutAlt />
@@ -99,15 +92,7 @@ const Home: React.FC<UserTypes> = ({ userData, setUserData }) => {
 						</SearchForm>
 					</SearchContainer>
 				</Header>
-				<FriendsContainer>
-					<ContainerUl>
-						{friends?.map((friend, index) => (
-							<FriendsLi>
-								<Friends friend={friend} />
-							</FriendsLi>
-						))}
-					</ContainerUl>
-				</FriendsContainer>
+				<Friends />
 			</Container>
 		</>
 	)

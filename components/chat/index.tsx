@@ -24,7 +24,6 @@ import Image from 'next/image'
 import { MdClose, MdSend } from 'react-icons/md'
 import { useRef, useState, useEffect } from 'react'
 import { getHourAndMinuts } from '@/utils/getHourAndMinutes'
-import { User } from '@/pages'
 
 interface TypeMessage {
 	author: 'Você' | 'user2',
@@ -73,7 +72,7 @@ const Chat: React.FC = () => {
 				<ChatContainer>
 					<ContainerUl>
 						{messages.map((message, index) => (
-							<>
+							<div key={index}>
 								{
 									messages[index - 1] &&
 										new Date(messages[index].time).getTime() - new Date(messages[index - 1].time).getTime() > 60 * 60 * 1000 ||
@@ -83,11 +82,11 @@ const Chat: React.FC = () => {
 										)
 										: null
 								}
-								<ContainerMessageLi key={index}>
+								<ContainerMessageLi>
 									<AuthorMessage>{message.author} - {message.time}</AuthorMessage>
 									<TextMessage>{message.text}</TextMessage>
 								</ContainerMessageLi>
-							</>
+							</div>
 						))}
 					</ContainerUl>
 				</ChatContainer>

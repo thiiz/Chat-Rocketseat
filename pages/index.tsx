@@ -1,46 +1,51 @@
-import Chat from '@/components/chat';
 import Login from '@/components/login';
 import { auth, db } from '@/services/firebase'
 import { useAuthState } from 'react-firebase-hooks/auth';
 import { useEffect } from 'react';
 import { useState } from 'react';
-import { onAuthStateChanged } from 'firebase/auth';
 import Loading from '@/components/loading';
 import Home from '@/components/home';
+import Head from 'next/head';
+import { doc, setDoc } from 'firebase/firestore';
 
 
 export interface UserTypes {
   userData: {
-    name: string | null;
+    uid: string | null;
+    displayName: string | null;
     email: string | null;
-    img: string | null;
+    photoURL: string | null;
     isOnline: boolean;
   };
   setUserData: React.Dispatch<React.SetStateAction<any>>
 }
 
-const Index: React.FC<UserTypes> = () => {
+const Index: React.FC = () => {
   const [user, loading] = useAuthState(auth as any)
   const [userData, setUserData] = useState<UserTypes['userData']>({
-    name: null,
+    uid: null,
+    displayName: null,
     email: null,
-    img: null,
-    isOnline: false,
+    photoURL: null,
+    isOnline: true,
   })
   const [isOnline, setIsOnline] = useState(false)
 
+  const updateUser = async (email: string | null, photoURL: string | null, displayName: string | null, uid: string) => {
+    const usersRef = doc(db, 'users', uid);
+    await setDoc(usersRef, {
+      uid,
+      displayName,
+      email,
+      photoURL,
+    }, { merge: true })
+  }
 
   useEffect(() => {
     if (user) {
-      console.log(user)
       const { email, photoURL, displayName, uid } = user
-      setUserData({ email, img: photoURL, name: displayName, isOnline })
-      db.collection("users").doc(uid).set({
-        name: displayName,
-        email: email,
-        img: photoURL,
-        isOnline: true
-      })
+      setUserData({ uid, email, photoURL, displayName, isOnline })
+      updateUser(email, photoURL, displayName, uid)
     }
 
   }, [user]);
@@ -49,6 +54,9 @@ const Index: React.FC<UserTypes> = () => {
 
   return user ?
     <>
+      <Head>
+        <title>Chathiz | Rseat</title>
+      </Head>
       <Home userData={userData} setUserData={setUserData} />
     </>
     :

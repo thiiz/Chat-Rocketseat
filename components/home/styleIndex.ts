@@ -44,10 +44,23 @@ const ContainerImage = styled.div`
  }
 `;
 
-const UserName = styled.span`
+const ContainerUserNameAndUserID = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
   color: ${props => props.theme.text.default};
+`
+
+const UserName = styled.span`
   font-weight: 700;
   font-size: 1.6rem;
+`
+
+const UserID = styled.button`
+  font-size: 1rem;
+  border: none;
+  background: none;
+  color: inherit;
 `
 
 const LogoutButton = styled.button`
@@ -64,13 +77,6 @@ const LogoutButton = styled.button`
 const LogoutSpan = styled.span`
 	font-size: 1rem;
 	letter-spacing: 0.18rem;
-`
-
-const FriendsContainer = styled.div`
-  min-height: 100%;
-  padding: 9.5rem 0 ;
-  display: grid;
-  grid-template-rows: 100% auto;
 `
 
 const SearchContainer = styled.div`
@@ -109,20 +115,6 @@ const SubmitButton = styled.button`
   color: ${props => props.theme.text.placeholder};
   cursor: pointer;
 `
-const ContainerUl = styled.ul`
-  display: flex;
-  flex-direction: column;
-  margin-top: 2rem;
-  `
-
-const FriendsLi = styled.li`
-  display: flex;
-  align-items: flex-end;
-  flex-wrap: wrap;
-  flex-direction: column;
-  row-gap: .5rem;
-  width: 100%
-  `
 
 export {
   Container,
@@ -133,11 +125,10 @@ export {
   UserName,
   LogoutButton,
   LogoutSpan,
-  FriendsContainer,
-  ContainerUl,
   SearchContainer,
   SearchForm,
   SearchInput,
   SubmitButton,
-  FriendsLi
+  ContainerUserNameAndUserID,
+  UserID,
 }

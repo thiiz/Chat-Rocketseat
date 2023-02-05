@@ -1,13 +1,13 @@
-import { auth, provider } from '@/services/firebase'
+import { auth, GoogleProvider } from '@/services/firebase'
+import { useSignInWithGoogle } from 'react-firebase-hooks/auth'
 import { Container, SignInButton } from '../styleIndex'
 
 const Login: React.FC = () => {
-	const handleSignIn = () => {
-		auth.signInWithPopup(provider).catch(alert)
-	}
+	const [signInWithGoogle] = useSignInWithGoogle(auth as any)
+
 	return (
 		<Container>
-			<SignInButton onClick={handleSignIn}>LOGIN</SignInButton>
+			<SignInButton onClick={() => signInWithGoogle()}>LOGIN</SignInButton>
 		</Container>
 	)
 }
