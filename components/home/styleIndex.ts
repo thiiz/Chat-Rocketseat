@@ -81,7 +81,7 @@ const LogoutSpan = styled.span`
 
 const SearchContainer = styled.div`
     width: 110%;
-    padding-bottom: 2rem;
+    padding-bottom: 1rem;
     background-color: inherit;
 `
 

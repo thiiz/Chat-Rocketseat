@@ -1,40 +1,39 @@
 import styled from "styled-components";
 
 
-const FriendsContainer = styled.div`
-  min-height: 100%;
-  padding: 9.5rem 0 ;
-  display: grid;
-  grid-template-rows: 100% auto;
-`
-
-const ContainerUl = styled.ul`
-  display: flex;
-  flex-direction: column;
-  margin-top: 2rem;
-  `
-
 const FriendsLi = styled.li`
   display: flex;
   align-items: flex-end;
   flex-wrap: wrap;
   flex-direction: column;
   row-gap: .5rem;
-  width: 100%
+  border-bottom: 1px solid #35334a;
+  &:hover{
+		border: none;
+	}
   `
 
-const Container = styled.div`
+const Container = styled.button`
 	display: flex;
 	align-items: center;
 	column-gap: 1rem;
-	border-bottom: 1px solid #35334a;
-	padding: 1rem;
-	width: 100%
+	height: 100%;
+	padding: 1rem 0;
+	width: 100%;
+	cursor: pointer;
+	background: none;
+	border: none;
+	transition: 250ms ease;
+	border-radius: 4px;
+	padding-left: 1rem;
+	&:hover{
+		background-color: ${props => props.theme.hover.list};
+	}
 `
 
 const ImageContainer = styled.div`
-	width: 4.7rem;
-	height: 4.7rem;
+	width: 4.3rem;
+	height: 4.3rem;
 	position: relative;
 
 	& img{
@@ -45,10 +44,13 @@ const NameAndLastMessageContainer = styled.div`
 display: flex;
 flex-direction: column;
 row-gap: .3rem;
+align-items: flex-start;
 `
 
 const Name = styled.span`
-color: ${props => props.theme.text.default};
+	color: ${props => props.theme.text.default};
+	font-weight: 700;
+	font-size: 1.6rem;
 `
 const LastMessage = styled.span`
 color: ${props => props.theme.text.placeholder};

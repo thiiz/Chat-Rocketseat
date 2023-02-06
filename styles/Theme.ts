@@ -33,6 +33,7 @@ const darkTheme = {
 	},
 	hover: {
 		button: '#3f3f3f',
+		list: '#3e3e6a47'
 	},
 }
 

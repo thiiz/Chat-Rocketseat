@@ -11,7 +11,7 @@ const FriendsContainer = styled.div`
 const ContainerUl = styled.ul`
   display: flex;
   flex-direction: column;
-  margin-top: 2rem;
+  margin-top: 3rem;
 `
 export {
 	FriendsContainer,

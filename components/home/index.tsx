@@ -21,14 +21,16 @@ import { useEffect, useState } from 'react';
 import { FaSearch, FaSignOutAlt } from 'react-icons/fa';
 import { auth, db } from "@/services/firebase";
 import { collection, addDoc, setDoc, doc, where, query } from "firebase/firestore";
+import { useCollection } from "react-firebase-hooks/firestore";
 
 const Home: React.FC<UserTypes> = ({ userData, setUserData }) => {
 	const [search, setSearch] = useState<string>('');
 
 
-	const [chatsSnapshot, setChatsSnapshot] = useState<any>(undefined)
 
-
+	const chatsRef = collection(db, "chats");
+	const q = query(chatsRef, where("users", "array-contains", userData?.email));
+	const [chatsSnapshot] = useCollection(q)
 
 	const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
 		e.preventDefault();
@@ -48,7 +50,7 @@ const Home: React.FC<UserTypes> = ({ userData, setUserData }) => {
 	const handleLogout = () => {
 		auth.signOut()
 		setUserData({
-			userID: null,
+			uid: null,
 			name: null,
 			email: null,
 			img: null,
@@ -58,7 +60,7 @@ const Home: React.FC<UserTypes> = ({ userData, setUserData }) => {
 
 	const chatExists = (newEmailChat: string) => {
 		return !!chatsSnapshot?.docs.find(
-			(chat: any) => chat.data().users.find((userData: string) => userData === newEmailChat)?.length > 0)
+			(chat: any) => chat.data().users.find((user: string) => user === newEmailChat)?.length > 0)
 	}
 	return (
 		<>
@@ -92,7 +94,7 @@ const Home: React.FC<UserTypes> = ({ userData, setUserData }) => {
 						</SearchForm>
 					</SearchContainer>
 				</Header>
-				<Friends />
+				<Friends userData={userData} />
 			</Container>
 		</>
 	)

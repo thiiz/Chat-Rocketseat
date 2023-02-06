@@ -10,29 +10,36 @@ import Image from 'next/image'
 import { UserTypes } from '@/pages'
 import { Friend } from './Friends'
 import { useAuthState } from 'react-firebase-hooks/auth'
-import { auth } from '@/services/firebase'
-
-const getUser = (users: Array<string>, userLogged: UserTypes["userData"]) => {
-	users.filter((user) => user !== userLogged.email)
-}
+import { auth, db } from '@/services/firebase'
+import { collection, query, where } from 'firebase/firestore'
+import { useCollection } from 'react-firebase-hooks/firestore'
 
 interface FriendItemType {
-	friend: Friend;
+	friendID: string;
+	friend: any;
+	user: UserTypes["userData"];
 }
 
-const FriendItem: React.FC<FriendItemType> = ({ friend }) => {
-	const [user] = useAuthState(auth)
-	console.log(friend)
-	console.log(user?.email)
+const getUser = (friend: FriendItemType["friend"], userLogged: FriendItemType["user"]) => {
+	return friend.filter((user: any) => user !== userLogged.email)[0]
+}
+
+
+
+const FriendItem: React.FC<FriendItemType> = ({ friend, friendID, user }) => {
+	const chatsRef = collection(db, "users");
+	const q = query(chatsRef, where("email", "==", getUser(friend, user)));
+	const [getUserItem] = useCollection(q)
+	const friendsData = getUserItem?.docs[0].data() as UserTypes["userData"]
 	return (
 		<FriendsLi>
-			<Container>
+			<Container onClick={() => console.log("click")}>
 				<ImageContainer>
-					<Image src={friend?.img || ''} alt='' sizes='100%' fill />
+					<Image src={friendsData?.photoURL || ''} alt='' sizes='100%' fill />
 				</ImageContainer>
 				<NameAndLastMessageContainer>
-					<Name>{friend?.name}</Name>
-					<LastMessage>{friend?.message}</LastMessage>
+					<Name>{friendsData?.displayName}</Name>
+					<LastMessage>eai</LastMessage>
 				</NameAndLastMessageContainer>
 			</Container>
 		</FriendsLi>
