@@ -13,6 +13,7 @@ import { useAuthState } from 'react-firebase-hooks/auth'
 import { auth, db } from '@/services/firebase'
 import { collection, query, where } from 'firebase/firestore'
 import { useCollection } from 'react-firebase-hooks/firestore'
+import { useRouter } from 'next/router'
 
 interface FriendItemType {
 	friendID: string;
@@ -31,9 +32,13 @@ const FriendItem: React.FC<FriendItemType> = ({ friend, friendID, user }) => {
 	const q = query(chatsRef, where("email", "==", getUser(friend, user)));
 	const [getUserItem] = useCollection(q)
 	const friendsData = getUserItem?.docs[0].data() as UserTypes["userData"]
+	const { push } = useRouter()
+	const handleViewProduct = () => {
+		push(`/chat/${friendsData?.uid}`)
+	}
 	return (
 		<FriendsLi>
-			<Container onClick={() => console.log("click")}>
+			<Container onClick={handleViewProduct}>
 				<ImageContainer>
 					<Image src={friendsData?.photoURL || ''} alt='' sizes='100%' fill />
 				</ImageContainer>

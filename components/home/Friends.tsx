@@ -21,7 +21,6 @@ const Friends: React.FC<{ userData: UserTypes["userData"] }> = ({ userData }) =>
 	const [friendsID, setFriendsID] = useState<FriendsList>([]);
 	const chatsRef = collection(db, "chats");
 	const q = query(chatsRef, where("users", "array-contains", userData?.email));
-
 	const [chatSnapshot] = useCollection(q)
 
 	useEffect(() => {

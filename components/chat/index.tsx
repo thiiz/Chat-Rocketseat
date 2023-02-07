@@ -24,6 +24,8 @@ import Image from 'next/image'
 import { MdClose, MdSend } from 'react-icons/md'
 import { useRef, useState, useEffect } from 'react'
 import { getHourAndMinuts } from '@/utils/getHourAndMinutes'
+import { UserTypes } from '@/pages'
+import { useRouter } from 'next/router'
 
 interface TypeMessage {
 	author: 'Você' | 'user2',
@@ -32,7 +34,8 @@ interface TypeMessage {
 }
 
 
-const Chat: React.FC = () => {
+const Chat: React.FC<{ user: UserTypes["userData"] }> = ({ user }) => {
+	const { push } = useRouter()
 	const [messages, setMessages] = useState<TypeMessage[]>([]);
 	const [newMessage, setNewMessage] = useState('');
 	const messagesEndRef = useRef<HTMLHeadingElement>(null)
@@ -58,21 +61,21 @@ const Chat: React.FC = () => {
 				<Header>
 					<UserInfoContainer>
 						<ContainerImage>
-							<Image src="https://randomuser.me/api/portraits/women/8.jpg" fill sizes='100%' alt='' />
+							<Image src={user.photoURL || ''} fill sizes='100%' alt='' />
 						</ContainerImage>
 						<NameAndStatusContainer>
-							<UserName>Cecilia Sassaki</UserName>
+							<UserName>{user.displayName}</UserName>
 							<UserStatus>Online</UserStatus>
 						</NameAndStatusContainer>
 					</UserInfoContainer>
-					<CloseButton>
+					<CloseButton onClick={() => push('/')}>
 						<MdClose />
 					</CloseButton>
 				</Header>
 				<ChatContainer>
 					<ContainerUl>
 						{messages.map((message, index) => (
-							<div key={index}>
+							<>
 								{
 									messages[index - 1] &&
 										new Date(messages[index].time).getTime() - new Date(messages[index - 1].time).getTime() > 60 * 60 * 1000 ||
@@ -82,11 +85,11 @@ const Chat: React.FC = () => {
 										)
 										: null
 								}
-								<ContainerMessageLi>
+								<ContainerMessageLi key={index}>
 									<AuthorMessage>{message.author} - {message.time}</AuthorMessage>
 									<TextMessage>{message.text}</TextMessage>
 								</ContainerMessageLi>
-							</div>
+							</>
 						))}
 					</ContainerUl>
 				</ChatContainer>
