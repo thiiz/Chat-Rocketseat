@@ -61,10 +61,10 @@ const Chat: React.FC<{ user: UserTypes["userData"] }> = ({ user }) => {
 				<Header>
 					<UserInfoContainer>
 						<ContainerImage>
-							<Image src={user.photoURL || ''} fill sizes='100%' alt='' />
+							<Image src={user?.photoURL || ''} fill sizes='100%' alt='' />
 						</ContainerImage>
 						<NameAndStatusContainer>
-							<UserName>{user.displayName}</UserName>
+							<UserName>{user?.displayName}</UserName>
 							<UserStatus>Online</UserStatus>
 						</NameAndStatusContainer>
 					</UserInfoContainer>

@@ -9,7 +9,7 @@ import { GoogleAuthProvider } from "firebase/auth";
 // Your web app's Firebase configuration
 // For Firebase JS SDK v7.20.0 and later, measurementId is optional
 const firebaseConfig = {
-	apiKey: "AIzaSyCY4avej0WEknnPy5Kb2p7iPxUDPQe6jK4",
+	apiKey: process.env.API_KEY_FIREBASE,
 	authDomain: "chat-rseat-5482a.firebaseapp.com",
 	projectId: "chat-rseat-5482a",
 	storageBucket: "chat-rseat-5482a.appspot.com",
