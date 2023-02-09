@@ -11,6 +11,7 @@ const FriendsContainer = styled.div`
 const ContainerUl = styled.ul`
   display: flex;
   flex-direction: column;
+  justify-content: flex-end;
   margin-top: 3rem;
 `
 export {
