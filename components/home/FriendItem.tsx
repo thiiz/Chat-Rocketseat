@@ -8,33 +8,27 @@ import {
 } from './styleFriendItem'
 import Image from 'next/image'
 import { UserTypes } from '@/pages'
-import { Friend } from './Friends'
-import { useAuthState } from 'react-firebase-hooks/auth'
-import { auth, db } from '@/services/firebase'
+import { db } from '@/services/firebase'
 import { collection, query, where } from 'firebase/firestore'
 import { useCollection } from 'react-firebase-hooks/firestore'
 import { useRouter } from 'next/router'
+import { getUser } from '@/utils/getUser'
 
 interface FriendItemType {
-	friendID: string;
 	friend: any;
 	user: UserTypes["userData"];
-}
-
-const getUser = (friend: FriendItemType["friend"], userLogged: FriendItemType["user"]) => {
-	return friend.filter((user: any) => user !== userLogged.email)[0]
+	chatID: any;
 }
 
 
-
-const FriendItem: React.FC<FriendItemType> = ({ friend, friendID, user }) => {
+const FriendItem: React.FC<FriendItemType> = ({ friend, user, chatID }) => {
 	const chatsRef = collection(db, "users");
 	const q = query(chatsRef, where("email", "==", getUser(friend, user)));
 	const [getUserItem] = useCollection(q)
-	const friendsData = getUserItem?.docs[0].data() as UserTypes["userData"]
+	const friendsData = getUserItem?.docs[0]?.data() as UserTypes["userData"]
 	const { push } = useRouter()
 	const handleViewProduct = () => {
-		push(`/chat/${friendsData?.uid}`)
+		push(`/chat/${chatID}`)
 	}
 	return (
 		<FriendsLi>

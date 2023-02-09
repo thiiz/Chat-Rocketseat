@@ -20,13 +20,15 @@ import Image from "next/image";
 import { useEffect, useState } from 'react';
 import { FaSearch, FaSignOutAlt } from 'react-icons/fa';
 import { auth, db } from "@/services/firebase";
-import { collection, addDoc, setDoc, doc, where, query } from "firebase/firestore";
+import { collection, addDoc, setDoc, doc, where, query, getDoc } from "firebase/firestore";
 import { useCollection } from "react-firebase-hooks/firestore";
+
+function isValidEmail(email: string) {
+	return /\S+@\S+\.\S+/.test(email);
+}
 
 const Home: React.FC<UserTypes> = ({ userData, setUserData }) => {
 	const [search, setSearch] = useState<string>('');
-
-
 
 	const chatsRef = collection(db, "chats");
 	const q = query(chatsRef, where("users", "array-contains", userData?.email));
@@ -34,11 +36,11 @@ const Home: React.FC<UserTypes> = ({ userData, setUserData }) => {
 
 	const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
 		e.preventDefault();
-		const isEmail =
-			/^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-		if (!isEmail) return alert("ENDEREÇO DE EMIAL INVÁLIDO")
+		const isEmail = isValidEmail(search)
+		if (!isEmail) return alert("ENDEREÇO DE EMAIL INVÁLIDO")
 
 		if (chatExists(search)) return alert("O CHAT JÁ EXISTE")
+
 		await addDoc(collection(db, "chats"), {
 			users: [userData.email, search]
 		});
@@ -62,6 +64,8 @@ const Home: React.FC<UserTypes> = ({ userData, setUserData }) => {
 		return !!chatsSnapshot?.docs.find(
 			(chat: any) => chat.data().users.find((user: string) => user === newEmailChat)?.length > 0)
 	}
+
+
 	return (
 		<>
 			<Container>

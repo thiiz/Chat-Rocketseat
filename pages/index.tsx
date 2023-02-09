@@ -15,21 +15,19 @@ export interface UserTypes {
     displayName: string | null;
     email: string | null;
     photoURL: string | null;
-    isOnline: boolean;
   };
   setUserData: React.Dispatch<React.SetStateAction<any>>
 }
 
 const Index: React.FC = () => {
   const [user, loading] = useAuthState(auth as any)
+  const [isOnline, setIsOnline] = useState(false)
   const [userData, setUserData] = useState<UserTypes['userData']>({
     uid: null,
     displayName: null,
     email: null,
     photoURL: null,
-    isOnline: true,
   })
-  const [isOnline, setIsOnline] = useState(false)
 
   const updateUser = async (email: string | null, photoURL: string | null, displayName: string | null, uid: string) => {
     const usersRef = doc(db, 'users', uid);
@@ -44,7 +42,7 @@ const Index: React.FC = () => {
   useEffect(() => {
     if (user) {
       const { email, photoURL, displayName, uid } = user
-      setUserData({ uid, email, photoURL, displayName, isOnline })
+      setUserData({ uid, email, photoURL, displayName })
       updateUser(email, photoURL, displayName, uid)
     }
 

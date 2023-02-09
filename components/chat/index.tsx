@@ -13,11 +13,7 @@ import {
 	MessageDate,
 	ContainerUl,
 	ContainerMessageLi,
-	TextMessage,
-	FormContainer,
-	ChatForm,
-	ChatInput,
-	SubmitButton
+	TextMessage
 } from '@/styles/styleIndex'
 
 import Image from 'next/image'
@@ -26,18 +22,18 @@ import { useRef, useState, useEffect } from 'react'
 import { getHourAndMinuts } from '@/utils/getHourAndMinutes'
 import { UserTypes } from '@/pages'
 import { useRouter } from 'next/router'
+import Footer from './Footer'
 
 interface TypeMessage {
-	author: 'Você' | 'user2',
+	author: string,
 	text: string,
 	time: string,
 }
 
 
-const Chat: React.FC<{ user: UserTypes["userData"] }> = ({ user }) => {
+const Chat: React.FC<{ user: UserTypes["userData"] | undefined }> = ({ user }) => {
 	const { push } = useRouter()
 	const [messages, setMessages] = useState<TypeMessage[]>([]);
-	const [newMessage, setNewMessage] = useState('');
 	const messagesEndRef = useRef<HTMLHeadingElement>(null)
 
 	const scrollToBottom = () => {
@@ -48,12 +44,7 @@ const Chat: React.FC<{ user: UserTypes["userData"] }> = ({ user }) => {
 		scrollToBottom()
 	}, [messages]);
 
-	const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
-		event.preventDefault();
-		setMessages([...messages, { author: 'Você', text: newMessage, time: getHourAndMinuts() }]);
-		setNewMessage('');
 
-	};
 
 	return (
 		<>
@@ -93,18 +84,7 @@ const Chat: React.FC<{ user: UserTypes["userData"] }> = ({ user }) => {
 						))}
 					</ContainerUl>
 				</ChatContainer>
-				<FormContainer>
-					<ChatForm onSubmit={handleSubmit}>
-						<ChatInput
-							autoFocus
-							type="text"
-							placeholder='Digite sua mensagem'
-							value={newMessage}
-							onChange={event => setNewMessage(event.target.value)}
-						/>
-						<SubmitButton type="submit"><MdSend /></SubmitButton>
-					</ChatForm>
-				</FormContainer>
+				<Footer messages={messages} setMessages={setMessages} />
 			</Container>
 			<div id="chatEnd" ref={messagesEndRef} />
 		</>

@@ -18,21 +18,22 @@ export type FriendsList = Friend[];
 
 
 const Friends: React.FC<{ userData: UserTypes["userData"] }> = ({ userData }) => {
-	const [friendsID, setFriendsID] = useState<FriendsList>([]);
+	const [friends, setFriends] = useState<FriendsList>([]);
 	const chatsRef = collection(db, "chats");
 	const q = query(chatsRef, where("users", "array-contains", userData?.email));
 	const [chatSnapshot] = useCollection(q)
 
 	useEffect(() => {
-		setFriendsID(chatSnapshot?.docs as any)
+		setFriends(chatSnapshot?.docs as any)
 	}, [chatSnapshot])
+
 	return (
 		<FriendsContainer>
 			<ContainerUl>
-				{friendsID?.map((friend: any, index: number | undefined) => (
+				{friends?.map((friend: any, index: number | undefined) => (
 					<FriendItem
 						key={index}
-						friendID={friend.id}
+						chatID={friend.id}
 						friend={friend.data().users}
 						user={userData}
 					/>
