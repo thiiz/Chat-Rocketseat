@@ -31,11 +31,10 @@ export const getStaticProps: GetStaticProps = async (context) => {
 	const docRef: any = doc(db, "chats", id)
 	const docs = await getDoc(docRef)
 	const { users }: any = docs?.data()
-	console.log(users)
-	return { props: { usersEmail: users } }
+	return { props: { usersUid: users } }
 }
 
-const UserChat: React.FC<{ usersEmail: string }> = ({ usersEmail }) => {
+const UserChat: React.FC<{ usersUid: Array<string> }> = ({ usersUid }) => {
 	const [user] = useAuthState(auth as any)
 	const userData: UserTypes['userData'] = {
 		uid: user?.uid || null,
@@ -44,17 +43,17 @@ const UserChat: React.FC<{ usersEmail: string }> = ({ usersEmail }) => {
 		photoURL: user?.photoURL || null,
 	}
 
-	const friendEmail = getUser(usersEmail, userData)
+	const friendUid = getUser(usersUid, userData)
 	const friendUserRef = collection(db, "users")
-	const q = query(friendUserRef, where("email", "==", friendEmail))
+	const q = query(friendUserRef, where("uid", "==", friendUid))
 	const [userSnapshot] = useCollection(q)
 	const friendUser = userSnapshot?.docs[0].data()
 	return (
 		<>
 			<Head>
-				<title>{friendUser?.displayName.toUpperCase()} | Chathiz</title>
+				<title>{friendUser ? `${friendUser?.displayName.toUpperCase()} | Chathiz` : 'Chathiz'}</title>
 			</Head>
-			<Chat user={friendUser as UserTypes["userData"]} />
+			<Chat friend={friendUser as UserTypes["userData"]} />
 		</>
 	)
 }

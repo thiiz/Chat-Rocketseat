@@ -23,48 +23,55 @@ import { auth, db } from "@/services/firebase";
 import { collection, addDoc, setDoc, doc, where, query, getDoc } from "firebase/firestore";
 import { useCollection } from "react-firebase-hooks/firestore";
 
-function isValidEmail(email: string) {
-	return /\S+@\S+\.\S+/.test(email);
+function isValidUid(uid: string) {
+	console.log(uid.length)
+	if (uid.length !== 28)
+		return false
+	return true
 }
 
 const Home: React.FC<UserTypes> = ({ userData, setUserData }) => {
 	const [search, setSearch] = useState<string>('');
 
 	const chatsRef = collection(db, "chats");
-	const q = query(chatsRef, where("users", "array-contains", userData?.email));
+	const q = query(chatsRef, where("users", "array-contains", userData?.uid));
 	const [chatsSnapshot] = useCollection(q)
 
 	const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
 		e.preventDefault();
-		const isEmail = isValidEmail(search)
-		if (!isEmail) return alert("ENDEREÇO DE EMAIL INVÁLIDO")
+
+		if (!search) return
+
+		const isUid = isValidUid(search)
+		if (!isUid) return alert("ID DE USUÁRIO INVÁLIDO")
 
 		if (chatExists(search)) return alert("O CHAT JÁ EXISTE")
 
+		if (userData.uid === search) {
+			alert("TENTE UTILIZAR OUTRO ID")
+		}
+
 		await addDoc(collection(db, "chats"), {
-			users: [userData.email, search]
+			users: [userData.uid, search]
 		});
 
 		alert("CHAT CRIADO COM SUCESSO")
-
 	}
 
 	const handleLogout = () => {
 		auth.signOut()
 		setUserData({
 			uid: null,
-			name: null,
+			displayName: null,
 			email: null,
-			img: null,
-			isOnline: false,
+			photoURL: null,
 		})
 	}
 
-	const chatExists = (newEmailChat: string) => {
+	const chatExists = (newUidChat: string) => {
 		return !!chatsSnapshot?.docs.find(
-			(chat: any) => chat.data().users.find((user: string) => user === newEmailChat)?.length > 0)
+			(chat: any) => chat.data().users.find((user: string) => user === newUidChat)?.length > 0)
 	}
-
 
 	return (
 		<>
@@ -77,7 +84,7 @@ const Home: React.FC<UserTypes> = ({ userData, setUserData }) => {
 							</ContainerImage>
 							<ContainerUserNameAndUserID>
 								<UserName>{userData?.displayName}</UserName>
-								<UserID>#{userData?.uid}</UserID>
+								<UserID>{userData?.uid}</UserID>
 							</ContainerUserNameAndUserID>
 						</MyProfileContainer>
 						<LogoutButton onClick={handleLogout}>

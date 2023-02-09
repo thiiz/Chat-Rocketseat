@@ -82,14 +82,6 @@ const ChatContainer = styled.div`
   grid-template-rows: 100% auto;
 `
 
-const AuthorMessage = styled.span`
- color: ${props => props.theme.text.default};  
- font-size: 1.2rem;
- font-weight: 400;
- margin-top: 1.5rem;
-
-`
-
 const MessageDate = styled.span`
   color: ${props => props.theme.text.default};  
   align-self: center;
@@ -101,26 +93,8 @@ const MessageDate = styled.span`
 const ContainerUl = styled.ul`
   display: flex;
   flex-direction: column;
-  align-items: flex-end;
-  justify-content: flex-end;
   `
 
-const ContainerMessageLi = styled.li`
-  display: flex;
-  align-items: flex-end;
-  flex-wrap: wrap;
-  flex-direction: column;
-  row-gap: .5rem;
-`
-
-const TextMessage = styled.span`
-  color: ${props => props.theme.text.default}; 
-  background-color: ${props => props.theme.bg.chat.primary};
-  padding: 1.4rem;
-  border-radius: 8px 8px 0px 8px;
-  font-size: 1.35rem;
-  word-break: break-word;
-  `
 export {
   Container,
   Content,
@@ -134,7 +108,4 @@ export {
   ChatContainer,
   MessageDate,
   ContainerUl,
-  ContainerMessageLi,
-  AuthorMessage,
-  TextMessage
 }

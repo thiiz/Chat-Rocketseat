@@ -23,7 +23,7 @@ interface FriendItemType {
 
 const FriendItem: React.FC<FriendItemType> = ({ friend, user, chatID }) => {
 	const chatsRef = collection(db, "users");
-	const q = query(chatsRef, where("email", "==", getUser(friend, user)));
+	const q = query(chatsRef, where("uid", "==", getUser(friend, user)));
 	const [getUserItem] = useCollection(q)
 	const friendsData = getUserItem?.docs[0]?.data() as UserTypes["userData"]
 	const { push } = useRouter()

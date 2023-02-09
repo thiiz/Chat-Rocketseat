@@ -14,7 +14,6 @@ const ContainerUl = styled.ul`
   margin-top: 3rem;
 `
 export {
-	FriendsContainer,
-	ContainerUl,
-
+  FriendsContainer,
+  ContainerUl,
 }

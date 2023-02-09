@@ -1,4 +1,3 @@
-import Head from 'next/head'
 import {
 	Container,
 	ContainerImage,
@@ -9,11 +8,7 @@ import {
 	UserStatus,
 	CloseButton,
 	ChatContainer,
-	AuthorMessage,
-	MessageDate,
 	ContainerUl,
-	ContainerMessageLi,
-	TextMessage
 } from '@/styles/styleIndex'
 
 import Image from 'next/image'
@@ -23,18 +18,28 @@ import { getHourAndMinuts } from '@/utils/getHourAndMinutes'
 import { UserTypes } from '@/pages'
 import { useRouter } from 'next/router'
 import Footer from './Footer'
-
-interface TypeMessage {
-	author: string,
-	text: string,
-	time: string,
-}
+import { useCollection } from 'react-firebase-hooks/firestore'
+import { db } from '@/services/firebase'
+import { collection, doc, DocumentData, orderBy, query, QuerySnapshot, where } from 'firebase/firestore'
+import Message from './message'
 
 
-const Chat: React.FC<{ user: UserTypes["userData"] | undefined }> = ({ user }) => {
-	const { push } = useRouter()
-	const [messages, setMessages] = useState<TypeMessage[]>([]);
+
+const Chat: React.FC<{ friend: UserTypes["userData"] | undefined }> = ({ friend }) => {
+	const router = useRouter()
+
+	const [messages, setMessages] = useState<QuerySnapshot<DocumentData> | undefined>();
 	const messagesEndRef = useRef<HTMLHeadingElement>(null)
+
+	const usersRef = collection(db, "chats");
+	const docRef = doc(usersRef, `${router.query.id}`)
+	const messagesRef = collection(docRef, "messages");
+	const messagesQuery = query(messagesRef, orderBy("timestamp", "asc"))
+	const [allMessages] = useCollection(messagesQuery)
+
+	useEffect(() => {
+		setMessages(allMessages)
+	}, [allMessages])
 
 	const scrollToBottom = () => {
 		messagesEndRef.current?.scrollIntoView({ behavior: "smooth" })
@@ -44,47 +49,35 @@ const Chat: React.FC<{ user: UserTypes["userData"] | undefined }> = ({ user }) =
 		scrollToBottom()
 	}, [messages]);
 
-
-
 	return (
 		<>
 			<Container>
 				<Header>
 					<UserInfoContainer>
 						<ContainerImage>
-							<Image src={user?.photoURL || ''} fill sizes='100%' alt='' />
+							{friend?.photoURL ?
+								<Image src={friend?.photoURL || ''} fill sizes='100%' alt='' />
+								:
+								''
+							}
 						</ContainerImage>
 						<NameAndStatusContainer>
-							<UserName>{user?.displayName}</UserName>
+							<UserName>{friend?.displayName}</UserName>
 							<UserStatus>Online</UserStatus>
 						</NameAndStatusContainer>
 					</UserInfoContainer>
-					<CloseButton onClick={() => push('/')}>
+					<CloseButton onClick={() => router.push('/')}>
 						<MdClose />
 					</CloseButton>
 				</Header>
 				<ChatContainer>
 					<ContainerUl>
-						{messages.map((message, index) => (
-							<>
-								{
-									messages[index - 1] &&
-										new Date(messages[index].time).getTime() - new Date(messages[index - 1].time).getTime() > 60 * 60 * 1000 ||
-										index === 0
-										? (
-											<MessageDate>Hoje {getHourAndMinuts()}</MessageDate>
-										)
-										: null
-								}
-								<ContainerMessageLi key={index}>
-									<AuthorMessage>{message.author} - {message.time}</AuthorMessage>
-									<TextMessage>{message.text}</TextMessage>
-								</ContainerMessageLi>
-							</>
+						{messages?.docs?.map((message) => (
+							<Message friendName={friend?.displayName} message={message} key={message?.id} />
 						))}
 					</ContainerUl>
 				</ChatContainer>
-				<Footer messages={messages} setMessages={setMessages} />
+				<Footer />
 			</Container>
 			<div id="chatEnd" ref={messagesEndRef} />
 		</>

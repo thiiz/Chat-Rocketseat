@@ -1,19 +1,41 @@
 import { UserTypes } from "@/pages";
+import { auth, db } from "@/services/firebase";
 import { getHourAndMinuts } from "@/utils/getHourAndMinutes";
+import { useRouter } from "next/router";
 import { useState } from "react";
+import { useAuthState } from "react-firebase-hooks/auth";
 import { MdSend } from "react-icons/md";
+import firebase from "firebase/compat/app"
 import {
 	FormContainer,
 	ChatForm,
 	ChatInput,
 	SubmitButton
 } from './styleFooter'
+import { collection, doc, addDoc, Timestamp } from "firebase/firestore";
+import { formatWithOptions } from "util";
 
-const Footer: React.FC<{ setMessages: React.Dispatch<React.SetStateAction<any>>; messages: any; }> = ({ messages, setMessages }) => {
+const Footer = () => {
+	const { query } = useRouter()
 	const [newMessage, setNewMessage] = useState('');
-	const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+	const [user] = useAuthState(auth)
+
+	const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
 		event.preventDefault();
-		setMessages([...messages, { author: 'Você', text: newMessage, time: getHourAndMinuts() }]);
+		const date: Date = new Date
+		console.log(query)
+		const chatsRef = collection(db, "chats");
+		const docIdRef = doc(chatsRef, `${query?.id}`)
+
+		const messageRef = collection(docIdRef, "messages")
+
+		await addDoc(messageRef, {
+			message: newMessage,
+			user: user?.displayName,
+			photoURL: user?.photoURL,
+			timestamp: Timestamp.fromDate(date)
+		});
+
 		setNewMessage('');
 
 	};
