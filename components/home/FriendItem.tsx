@@ -26,6 +26,7 @@ const FriendItem: React.FC<FriendItemType> = ({ friend, user, chatID }) => {
 	const q = query(chatsRef, where("uid", "==", getUser(friend, user)));
 	const [getUserItem] = useCollection(q)
 	const friendsData = getUserItem?.docs[0]?.data() as UserTypes["userData"]
+	
 	const { push } = useRouter()
 	const handleViewProduct = () => {
 		push(`/chat/${chatID}`)

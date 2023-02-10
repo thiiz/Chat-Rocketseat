@@ -51,7 +51,7 @@ const UserChat: React.FC<{ usersUid: Array<string> }> = ({ usersUid }) => {
 	return (
 		<>
 			<Head>
-				<title>{friendUser ? `${friendUser?.displayName.toUpperCase()} | Chathiz` : 'Chathiz'}</title>
+				<title>{friendUser ? `${friendUser?.displayName.toUpperCase()} | Chathz` : 'Chathz'}</title>
 			</Head>
 			<Chat friend={friendUser as UserTypes["userData"]} />
 		</>

@@ -22,6 +22,7 @@ const Friends: React.FC<{ userData: UserTypes["userData"] }> = ({ userData }) =>
 	const q = query(chatsRef, where("users", "array-contains", userData?.uid));
 	const [chatSnapshot] = useCollection(q)
 
+	
 	useEffect(() => {
 		setFriends(chatSnapshot?.docs as any)
 	}, [chatSnapshot])
