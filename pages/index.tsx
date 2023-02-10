@@ -21,7 +21,6 @@ export interface UserTypes {
 
 const Index: React.FC = () => {
   const [user, loading] = useAuthState(auth as any)
-  const [isOnline, setIsOnline] = useState(false)
   const [userData, setUserData] = useState<UserTypes['userData']>({
     uid: null,
     displayName: null,
@@ -29,10 +28,10 @@ const Index: React.FC = () => {
     photoURL: null,
   })
 
-  const updateUser = async (email: string | null, photoURL: string | null, displayName: string | null, uid: string) => {
-    const usersRef = doc(db, 'users', uid);
+  const updateUser = async (email: string | null, photoURL: string | null, displayName: string | null, userID: string) => {
+    const usersRef = doc(db, 'users', userID);
     await setDoc(usersRef, {
-      uid,
+      uid: userID,
       displayName,
       email,
       photoURL,
@@ -42,8 +41,10 @@ const Index: React.FC = () => {
   useEffect(() => {
     if (user) {
       const { email, photoURL, displayName, uid } = user
-      setUserData({ uid, email, photoURL, displayName })
-      updateUser(email, photoURL, displayName, uid)
+      const lastFourID = uid?.slice(-4);
+      const userID = `${displayName}#${lastFourID}`
+      setUserData({ uid: userID, email, photoURL, displayName })
+      updateUser(email, photoURL, displayName, userID)
     }
 
   }, [user]);

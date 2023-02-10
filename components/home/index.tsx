@@ -25,7 +25,7 @@ import { useCollection } from "react-firebase-hooks/firestore";
 
 function isValidUid(uid: string) {
 	console.log(uid.length)
-	if (uid.length !== 28)
+	if (uid.length < 5)
 		return false
 	return true
 }

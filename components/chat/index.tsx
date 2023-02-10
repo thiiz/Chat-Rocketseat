@@ -12,15 +12,14 @@ import {
 } from '@/styles/styleIndex'
 
 import Image from 'next/image'
-import { MdClose, MdSend } from 'react-icons/md'
+import { MdClose } from 'react-icons/md'
 import { useRef, useState, useEffect } from 'react'
-import { getHourAndMinuts } from '@/utils/getHourAndMinutes'
 import { UserTypes } from '@/pages'
 import { useRouter } from 'next/router'
 import Footer from './Footer'
 import { useCollection } from 'react-firebase-hooks/firestore'
 import { db } from '@/services/firebase'
-import { collection, doc, DocumentData, orderBy, query, QuerySnapshot, where } from 'firebase/firestore'
+import { collection, doc, DocumentData, orderBy, query, QuerySnapshot } from 'firebase/firestore'
 import Message from './message'
 
 

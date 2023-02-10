@@ -15,7 +15,7 @@ import { useRouter } from 'next/router'
 import { getUser } from '@/utils/getUser'
 
 interface FriendItemType {
-	friend: any;
+	friend: UserTypes["userData"];
 	user: UserTypes["userData"];
 	chatID: any;
 }

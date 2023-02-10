@@ -36,16 +36,18 @@ export const getStaticProps: GetStaticProps = async (context) => {
 
 const UserChat: React.FC<{ usersUid: Array<string> }> = ({ usersUid }) => {
 	const [user] = useAuthState(auth as any)
+	const ID = user?.uid;
+	const lastFourID = ID?.slice(-4);
+	const userID = `${user?.displayName}#${lastFourID}`
 	const userData: UserTypes['userData'] = {
-		uid: user?.uid || null,
+		uid: userID || null,
 		displayName: user?.displayName || null,
 		email: user?.email || null,
 		photoURL: user?.photoURL || null,
 	}
 
-	const friendUid = getUser(usersUid, userData)
 	const friendUserRef = collection(db, "users")
-	const q = query(friendUserRef, where("uid", "==", friendUid))
+	const q = query(friendUserRef, where("uid", "==", getUser(usersUid, userData)))
 	const [userSnapshot] = useCollection(q)
 	const friendUser = userSnapshot?.docs[0].data()
 	return (
