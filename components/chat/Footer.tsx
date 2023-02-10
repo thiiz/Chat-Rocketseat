@@ -12,7 +12,7 @@ import {
 	ChatInput,
 	SubmitButton
 } from './styleFooter'
-import { collection, doc, addDoc, Timestamp } from "firebase/firestore";
+import { collection, doc, addDoc, Timestamp, serverTimestamp } from "firebase/firestore";
 import { formatWithOptions } from "util";
 
 const Footer = () => {
@@ -22,18 +22,18 @@ const Footer = () => {
 
 	const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
 		event.preventDefault();
-		const date: Date = new Date
 		console.log(query)
 		const chatsRef = collection(db, "chats");
 		const docIdRef = doc(chatsRef, `${query?.id}`)
 
 		const messageRef = collection(docIdRef, "messages")
-
+		const timestamp: any = serverTimestamp();
+		console.log(timestamp)
 		await addDoc(messageRef, {
 			message: newMessage,
 			user: user?.displayName,
 			photoURL: user?.photoURL,
-			timestamp: Timestamp.fromDate(date)
+			timestamp: timestamp
 		});
 
 		setNewMessage('');
