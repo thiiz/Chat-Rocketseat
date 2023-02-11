@@ -1,6 +1,6 @@
 import { UserTypes } from "@/pages"
 import { db } from "@/services/firebase";
-import { addDoc, arrayUnion, collection, doc, setDoc, updateDoc, where } from "firebase/firestore";
+import { arrayUnion, doc, updateDoc } from "firebase/firestore";
 
 const AcceptChat: React.FC<{ user: UserTypes["userData"] | undefined; chatID: string }> = ({ user, chatID }) => {
 
