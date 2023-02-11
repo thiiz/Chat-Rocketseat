@@ -17,10 +17,10 @@ import {
 	UserID
 } from './styleIndex'
 import Image from "next/image";
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { FaSearch, FaSignOutAlt } from 'react-icons/fa';
 import { auth, db } from "@/services/firebase";
-import { collection, addDoc, setDoc, doc, where, query, getDoc } from "firebase/firestore";
+import { collection, addDoc, where, query } from "firebase/firestore";
 import { useCollection } from "react-firebase-hooks/firestore";
 
 function isValidUid(uid: string) {
@@ -32,6 +32,7 @@ function isValidUid(uid: string) {
 
 const Home: React.FC<UserTypes> = ({ userData, setUserData }) => {
 	const [search, setSearch] = useState<string>('');
+	const [isCopied, setIsCopied] = useState(false);
 
 	const chatsRef = collection(db, "chats");
 	const q = query(chatsRef, where("users", "array-contains", userData?.uid));
@@ -52,7 +53,8 @@ const Home: React.FC<UserTypes> = ({ userData, setUserData }) => {
 		}
 
 		await addDoc(collection(db, "chats"), {
-			users: [userData.uid, search]
+			users: [userData.uid, search],
+			accepted: [userData.uid]
 		});
 
 		alert("CHAT CRIADO COM SUCESSO")
@@ -73,6 +75,12 @@ const Home: React.FC<UserTypes> = ({ userData, setUserData }) => {
 			(chat: any) => chat.data().users.find((user: string) => user === newUidChat)?.length > 0)
 	}
 
+	const handleCopyUid = () => {
+		navigator.clipboard.writeText(`${userData.displayName}${userData?.uid?.slice(-5)}`).then(() => {
+			setIsCopied(true);
+		});
+	};
+
 	return (
 		<>
 			<Container>
@@ -82,9 +90,9 @@ const Home: React.FC<UserTypes> = ({ userData, setUserData }) => {
 							<ContainerImage>
 								{userData?.photoURL && <Image src={userData?.photoURL} fill sizes='100%' alt='' />}
 							</ContainerImage>
-							<ContainerUserNameAndUserID>
+							<ContainerUserNameAndUserID onClick={handleCopyUid}>
 								<UserName>{userData?.displayName}</UserName>
-								<UserID>{userData?.uid}</UserID>
+								<UserID>{userData?.uid?.slice(-5)}</UserID>
 							</ContainerUserNameAndUserID>
 						</MyProfileContainer>
 						<LogoutButton onClick={handleLogout}>

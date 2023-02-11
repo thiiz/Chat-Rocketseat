@@ -1,7 +1,6 @@
 import { AuthorMessage, ContainerMessageLi, TextMessage } from "./style"
 
 const Message: React.FC<{ message: any, friendName: string | null | undefined }> = ({ message, friendName }) => {
-	console.log(message)
 	const isFriend = friendName === message?.data()?.user
 	const time = message?.data()?.timestamp
 

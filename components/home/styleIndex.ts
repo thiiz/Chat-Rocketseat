@@ -54,6 +54,7 @@ const ContainerUserNameAndUserID = styled.div`
 const UserName = styled.span`
   font-weight: 700;
   font-size: 1.6rem;
+  cursor: pointer;
 `
 
 const UserID = styled.button`
@@ -80,7 +81,7 @@ const LogoutSpan = styled.span`
 `
 
 const SearchContainer = styled.div`
-    width: 110%;
+    width: 101.5%;
     padding-bottom: 1rem;
     background-color: inherit;
 `
@@ -90,12 +91,12 @@ const SearchForm = styled.form`
 `
 
 const SearchInput = styled.input`
-  width: 100%;
+   width: 100%;
   background-color: ${props => props.theme.bg.variant};
   color: ${props => props.theme.text.default};
   border: none;
   outline: none;
-  height: 3.2rem;
+  height: 3.1rem;
   border-radius: 7px;
   line-height: 1.4rem;
   padding: 1rem 2rem;

@@ -11,7 +11,7 @@ import {
 } from './styleFooter'
 import { collection, doc, addDoc, serverTimestamp } from "firebase/firestore";
 
-const Footer = () => {
+const InputMessage = () => {
 	const { query } = useRouter()
 	const [newMessage, setNewMessage] = useState('');
 	const [user] = useAuthState(auth)
@@ -25,7 +25,6 @@ const Footer = () => {
 
 		const messageRef = collection(docIdRef, "messages")
 		const timestamp: any = serverTimestamp();
-		console.log(timestamp)
 		await addDoc(messageRef, {
 			message: newMessage,
 			user: user?.displayName,
@@ -53,4 +52,4 @@ const Footer = () => {
 
 }
 
-export default Footer
+export default InputMessage

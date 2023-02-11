@@ -7,9 +7,11 @@ const FriendsLi = styled.li`
   flex-wrap: wrap;
   flex-direction: column;
   row-gap: .5rem;
-  border-bottom: 1px solid #35334a;
+	&:not(:first-child){
+		border-top: 1px solid #35334a;
+	}
   &:hover{
-		border: none;
+	  	border: none;
 	}
   `
 

@@ -16,25 +16,38 @@ import { MdClose } from 'react-icons/md'
 import { useRef, useState, useEffect } from 'react'
 import { UserTypes } from '@/pages'
 import { useRouter } from 'next/router'
-import Footer from './Footer'
+import InputMessage from './InputMessage'
 import { useCollection } from 'react-firebase-hooks/firestore'
 import { db } from '@/services/firebase'
-import { collection, doc, DocumentData, orderBy, query, QuerySnapshot } from 'firebase/firestore'
+import { collection, doc, DocumentData, orderBy, query, QuerySnapshot, where } from 'firebase/firestore'
 import Message from './message'
+import AcceptChat from './acceptChat'
 
 
 
-const Chat: React.FC<{ friend: UserTypes["userData"] | undefined }> = ({ friend }) => {
+const Chat: React.FC<{
+	friend: UserTypes["userData"];
+	user: UserTypes["userData"]
+}> = ({ friend, user }) => {
 	const router = useRouter()
-
 	const [messages, setMessages] = useState<QuerySnapshot<DocumentData> | undefined>();
 	const messagesEndRef = useRef<HTMLHeadingElement>(null)
 
-	const usersRef = collection(db, "chats");
-	const docRef = doc(usersRef, `${router.query.id}`)
+	const chatsRef = collection(db, "chats");
+
+	const docRef = doc(chatsRef, `${router.query.id}`)
 	const messagesRef = collection(docRef, "messages");
 	const messagesQuery = query(messagesRef, orderBy("timestamp", "asc"))
 	const [allMessages] = useCollection(messagesQuery)
+
+	const uid = `${user.displayName}#${user.uid?.slice(-4)}`
+	const usersQuery = query(chatsRef, where("users", "array-contains", uid));
+	const [usersChatSnapshot] = useCollection(usersQuery)
+
+	const usersAcceptedChat = usersChatSnapshot?.docs[0].data().accepted;
+
+	const isUserAccept = usersAcceptedChat?.includes(uid)
+	const isFriendAccept = usersAcceptedChat?.includes(friend?.uid)
 
 	useEffect(() => {
 		setMessages(allMessages)
@@ -61,7 +74,7 @@ const Chat: React.FC<{ friend: UserTypes["userData"] | undefined }> = ({ friend 
 							}
 						</ContainerImage>
 						<NameAndStatusContainer>
-							<UserName>{friend?.displayName}</UserName>
+							<UserName>{friend?.uid}</UserName>
 							<UserStatus>Online</UserStatus>
 						</NameAndStatusContainer>
 					</UserInfoContainer>
@@ -76,7 +89,10 @@ const Chat: React.FC<{ friend: UserTypes["userData"] | undefined }> = ({ friend 
 						))}
 					</ContainerUl>
 				</ChatContainer>
-				<Footer />
+				{isFriendAccept && isUserAccept && <InputMessage />}
+				{!isUserAccept && isFriendAccept &&
+					<AcceptChat user={user} chatID={`${router.query.id}`} />
+				}
 			</Container>
 			<div id="chatEnd" ref={messagesEndRef} />
 		</>

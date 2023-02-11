@@ -49,13 +49,13 @@ const UserChat: React.FC<{ usersUid: Array<string> }> = ({ usersUid }) => {
 	const friendUserRef = collection(db, "users")
 	const q = query(friendUserRef, where("uid", "==", getUser(usersUid, userData)))
 	const [userSnapshot] = useCollection(q)
-	const friendUser = userSnapshot?.docs[0].data()
+	const friendUser = userSnapshot?.docs[0]?.data()
 	return (
 		<>
 			<Head>
-				<title>{friendUser ? `${friendUser?.displayName.toUpperCase()} | Chathz` : 'Chathz'}</title>
+				<title>{friendUser ? `${friendUser?.displayName?.toUpperCase()} | Chathz` : 'Chathz'}</title>
 			</Head>
-			<Chat friend={friendUser as UserTypes["userData"]} />
+			{user && friendUser && <Chat friend={friendUser as UserTypes["userData"]} user={user as UserTypes["userData"]} />}
 		</>
 	)
 }
