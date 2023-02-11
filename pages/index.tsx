@@ -54,6 +54,8 @@ const Index: React.FC = () => {
   return user ?
     <>
       <Head>
+        <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9431670554375216"
+          crossOrigin="anonymous"></script>
         <title>Chathiz | Rseat</title>
       </Head>
       <Home userData={userData} setUserData={setUserData} />

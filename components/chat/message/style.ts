@@ -31,6 +31,7 @@ const TextMessage = styled.span<{ user: boolean }>`
   padding: 1.4rem;
   font-size: 1.35rem;
   word-break: break-word;
+  max-width: 57%;
   `
 const AuthorMessage = styled.span`
   color: ${p => p.theme.text.default};  

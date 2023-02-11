@@ -19,6 +19,7 @@ const Footer = () => {
 	const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
 		event.preventDefault();
 		console.log(query)
+		if (!newMessage) return
 		const chatsRef = collection(db, "chats");
 		const docIdRef = doc(chatsRef, `${query?.id}`)
 
