@@ -1,11 +1,10 @@
-import Image from "next/image";
 import styled from "styled-components";
 
 const Container = styled.div`
 	background-color: ${props => props.theme.bg.default};
    	font-family: "Roboto", sans-serif;
    	padding: 0 2.4rem;
-	display: grid; 
+	display: grid;
     grid-template-rows: 1fr auto;
     grid-template-columns: 1fr;
     min-height: 100vh;
@@ -68,10 +67,10 @@ const LogoutButton = styled.button`
   display: flex;
   align-items: center;
   flex-direction: column;
-  color: ${props => props.theme.text.default};  
+  color: ${props => props.theme.text.default};
   background: none;
   border: none;
-  font-size: 2rem; 
+  font-size: 2rem;
   cursor: pointer;
 `
 

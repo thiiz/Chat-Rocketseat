@@ -22,6 +22,7 @@ import { db } from '@/services/firebase'
 import { collection, doc, DocumentData, orderBy, query, QuerySnapshot, where } from 'firebase/firestore'
 import Message from './message'
 import AcceptChat from './acceptChat'
+import FriendNotAccept from './friend-not-accept'
 
 
 
@@ -75,7 +76,7 @@ const Chat: React.FC<{
 						</ContainerImage>
 						<NameAndStatusContainer>
 							<UserName>{friend?.uid}</UserName>
-							<UserStatus>Online</UserStatus>
+							{isFriendAccept ? <UserStatus>Online</UserStatus> : ''}
 						</NameAndStatusContainer>
 					</UserInfoContainer>
 					<CloseButton onClick={() => router.push('/')}>
@@ -89,7 +90,8 @@ const Chat: React.FC<{
 						))}
 					</ContainerUl>
 				</ChatContainer>
-				{isFriendAccept && isUserAccept && <InputMessage />}
+				{isUserAccept && isFriendAccept && <InputMessage />}
+				{!isFriendAccept && isUserAccept && <FriendNotAccept />}
 				{!isUserAccept && isFriendAccept &&
 					<AcceptChat user={user} chatID={`${router.query.id}`} />
 				}
